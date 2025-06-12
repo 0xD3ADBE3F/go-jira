@@ -267,6 +267,10 @@ type IssueFields struct {
 	Custom                        CustomFieldsStore  `json:"-"`
 }
 
+type IssueCreateParams struct {
+	Fields map[string]interface{} `json:"fields"`
+}
+
 // CustomFieldsStore is store for custom fields data
 type CustomFieldsStore map[string]json.RawMessage
 
@@ -995,7 +999,6 @@ func (f *IssueFields) UnmarshalJSON(b []byte) error {
 	}
 
 	err := json.Unmarshal(b, &f.Custom)
-
 	if err != nil {
 		return err
 	}
@@ -1003,7 +1006,6 @@ func (f *IssueFields) UnmarshalJSON(b []byte) error {
 	for key, chunk := range f.Custom {
 		if field, found := knownFields[key]; found {
 			err = json.Unmarshal(chunk, field.Addr().Interface())
-
 			if err != nil {
 				return err
 			}
